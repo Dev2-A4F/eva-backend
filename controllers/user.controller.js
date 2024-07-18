@@ -3,6 +3,8 @@ const bcryptjs = require('bcryptjs')
 const  Usuario  = require('../models/user')
 const { verificarUnicidad } = require('../helpers/verificarUnicidad')
 const { findUser } = require('../helpers/findUser')
+const cloudinary = require('../config/cloudinary'); // Asegúrate de que la ruta es correcta
+
 
  
 const userGET = async(req = request, res = response) => {
@@ -34,16 +36,30 @@ const userPOST = async (req, res = response) => {
   const { role } = req.body;
 
   if (role === "CONTADORA") {
-    const { nombre, correo, contraseña, experiencia } = req.body;
+    const { nombre, correo, contraseña, experiencia, fecha_nacimiento, imgContadora, especialidad } = req.body;
 
-    if (!nombre || !correo || !contraseña || !experiencia) {
+    if (!nombre || !correo || !contraseña || !experiencia || !fecha_nacimiento || !imgContadora || !especialidad) {
       return res.status(400).json({
         msg: 'Todos los campos son obligatorios.'
       });
     }
 
     try {
-      const user = new Usuario({ nombre, correo, contraseña, role: "CONTADORA", experiencia });
+      // Subir imagen a Cloudinary
+      const uploadResponse = await cloudinary.uploader.upload(imgContadora, {
+        folder: 'contadoras', // Puedes cambiar el folder según tu estructura
+      });
+
+      const user = new Usuario({
+        nombre,
+        correo,
+        contraseña,
+        role: "CONTADORA",
+        experiencia,
+        fecha_nacimiento,
+        imgContadora: uploadResponse.secure_url, // Guardar URL de la imagen subida
+        especialidad
+      });
 
       const salt = bcryptjs.genSaltSync();
       user.contraseña = bcryptjs.hashSync(contraseña, salt);
@@ -108,7 +124,17 @@ const userPOST = async (req, res = response) => {
 
       const contadora = contadoras[0];
 
-      const user = new Usuario({ nombre, correo, contraseña, apllido_materno, apllido_paterno, dni, celular, role: "CLIENTE", contadora: contadora._id });
+      const user = new Usuario({
+        nombre,
+        correo,
+        contraseña,
+        apllido_materno,
+        apllido_paterno,
+        dni,
+        celular,
+        role: "CLIENTE",
+        contadora: contadora._id
+      });
 
       const salt = bcryptjs.genSaltSync();
       user.contraseña = bcryptjs.hashSync(contraseña, salt);

@@ -1,6 +1,8 @@
 const { response, request } = require('express')
 const bcryptjs = require('bcryptjs')
 const  Usuario  = require('../models/user')
+const  Servicio  = require('../models/servicio')
+
 const { verificarUnicidad } = require('../helpers/verificarUnicidad')
 const { findUser } = require('../helpers/findUser')
 const cloudinary = require('../config/cloudinary'); // Asegúrate de que la ruta es correcta
@@ -302,6 +304,48 @@ const getMiContadora = async (req, res = response) => {
   }
 };
 
+const getContadoraById = async (req, res = response) => {
+  const contadoraId = req.params.id;
+
+  try {
+    // Obteniendo la contadora por ID
+    const contadora = await Usuario.findById(contadoraId);
+
+    if (!contadora) {
+      return res.status(404).json({
+        msg: 'Contadora no encontrada'
+      });
+    }
+
+    // Obteniendo los IDs de los clientes asociados a la contadora
+    const clienteIds = contadora.clientes;
+
+    // Buscando los detalles completos de los clientes en la base de datos
+    const clientes = await Usuario.find({ _id: { $in: clienteIds } });
+
+    // Agregando la información completa del servicioCliente si existe
+    const clientesConServicios = await Promise.all(clientes.map(async (cliente) => {
+      if (cliente.servicioCliente) {
+        const servicio = await Servicio.findById(cliente.servicioCliente);
+        return { ...cliente.toObject(), servicioCliente: servicio };
+      }
+      return cliente.toObject();
+    }));
+
+    res.json({
+      contadora: {
+        ...contadora.toObject(),
+        clientes: clientesConServicios
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: 'Error de Servidor'
+    });
+  }
+};
+
 
 module.exports = {
   userGET,
@@ -310,5 +354,6 @@ module.exports = {
   getContadoras,
   getMisClientes,
   createAdminUser,
-  getMiContadora
+  getMiContadora,
+  getContadoraById
 }

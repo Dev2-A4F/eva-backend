@@ -1,4 +1,5 @@
 const express = require('express')
+const morgan = require('morgan')
 const cors = require('cors')
 const { dbConnection } = require('../database/config')
 
@@ -12,6 +13,7 @@ class Server {
     this.postulantePath = '/api/postulante'
     this.servicioPath    = '/api/servicio'
     this.prestacionPath    = '/api/prestacion'
+
 
 
 
@@ -44,6 +46,9 @@ class Server {
     //Lectura y parseo del body
     this.app.use(express.json());
 
+    //morgan para ir viendo las solicitudes por consola
+    this.app.use(morgan("dev"))
+
     //Directorio Publico
     this.app.use(express.static('public'));
   }
@@ -54,6 +59,7 @@ class Server {
     this.app.use(this.postulantePath, require('../routes/postulante'))
     this.app.use(this.servicioPath, require('../routes/servicio'))
     this.app.use(this.prestacionPath, require('../routes/prestacion'))
+
   }
 
   listen() {

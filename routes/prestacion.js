@@ -1,30 +1,25 @@
-const { Router } = require('express')
-const { check } = require('express-validator')
-const { validarCampos } = require('../middlewares/validar-campos')
-const { registerPostulante, upload, getPostulantes } = require('../controllers/postulante.controller')
+const { Router } = require("express");
+const { check } = require("express-validator");
+const { validarCampos } = require("../middlewares/validar-campos");
+const { inicioServicio } = require("../controllers/servicio.controller");
+const { validarJWT } = require("../middlewares/validar-jwt");
+const { createPrestacionLegal, getPrestacionesLegales, getPrestacionLegal, actualizarPrestacionLegal, eliminarPrestacionLegal } = require("../controllers/prestacion");
 
 
 const router = Router()
 
-router.post('/', [
-    upload.fields([
-      { name: 'archivo_cv', maxCount: 1 },
-      { name: 'certificado_unico_laboral', maxCount: 1 }
-    ]),
-    check('nombre', 'El campo "nombre" es obligatorio').not().isEmpty(),
-    check('apellido_materno', 'El campo "apellido_materno" es obligatorio').not().isEmpty(),
-    check('apellido_paterno', 'El campo "apellido_paterno" es obligatorio').not().isEmpty(),
-    check('dni', 'El campo "dni" es obligatorio').not().isEmpty(),
-    check('anio_experiencia', 'El campo "anio_experiencia" es obligatorio').isInt(),
-    check('motivacion', 'El campo "motivacion" es obligatorio').not().isEmpty(),
-    check('correo', 'El campo "correo" es obligatorio').isEmail(),
-    check('celular', 'El campo "celular" es obligatorio').not().isEmpty(),
-    validarCampos
-  ], registerPostulante);
+router.post('/socio', [
+  validarJWT,
+  check('fecha', 'La fecha es obligatoria').not().isEmpty(),
+  check('hora', 'La hora es obligatoria').not().isEmpty(),
+  validarCampos
+], inicioServicio )
+
+router.post("/createPrestacionLegal", createPrestacionLegal)
+router.get("/getPrestacionesLegales", getPrestacionesLegales)
+router.get("/getPrestacionLegal/:id?", getPrestacionLegal)
+router.put("/actualizarPrestacionLegal/:id?", actualizarPrestacionLegal)
+router.delete("/eliminarPrestacionLegal/:id?", eliminarPrestacionLegal)
 
 
-  router.get("/", [], getPostulantes)
-
-
-
-module.exports = router
+module.exports = router;

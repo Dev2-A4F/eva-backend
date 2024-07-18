@@ -7,7 +7,7 @@ const { userExist } = require('../helpers/db-validators')
 
 const router = Router()
 
-router.post('/registerPostulante', 
+router.post('/', 
   upload.fields([
     { name: 'archivo_cv', maxCount: 1 },
     { name: 'certificado_unico_laboral', maxCount: 1 }

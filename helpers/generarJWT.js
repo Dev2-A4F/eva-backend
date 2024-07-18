@@ -22,7 +22,20 @@ const generarJWT = ( uid = '' ) => {
   } )
 }
 
+const verificarJWT = (token) => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, process.env.SECRETORPRIVATEKEY, (err, decoded) => {
+      if (err) {
+        reject('Token no válido');
+      } else {
+        resolve(decoded);
+      }
+    });
+  });
+};
+
 
 module.exports = {
-  generarJWT
+  generarJWT,
+  verificarJWT
 }

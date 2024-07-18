@@ -215,11 +215,44 @@ const getMisClientes = async (req, res = response) => {
   }
 };
 
+const createAdminUser = async (req, res = response) => {
+  const { correo, contraseña } = req.body;
+
+  if (!correo || !contraseña) {
+    return res.status(400).json({
+      msg: 'Usuario y contraseña son obligatorios.'
+    });
+  }
+
+  try {
+    // Crear un nuevo usuario con el rol "ADMIN"
+    const newUser = new Usuario({ correo, contraseña, role: "ADMIN" });
+
+    // Encriptar la contraseña
+    const salt = bcryptjs.genSaltSync();
+    newUser.contraseña = bcryptjs.hashSync(contraseña, salt);
+
+    // Guardar el nuevo usuario en la base de datos
+    await newUser.save();
+
+    // Responder con el nuevo usuario (sin la contraseña)
+    const { contraseña: _, ...userWithoutPassword } = newUser.toObject();
+    res.json(userWithoutPassword);
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: 'Error de Servidor'
+    });
+  }
+};
+
 
 module.exports = {
   userGET,
   userPOST,
   userPUT,
   getContadoras,
-  getMisClientes
+  getMisClientes,
+  createAdminUser
 }

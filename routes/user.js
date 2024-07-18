@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const { check } = require('express-validator')
-const { userGET, userPOST, userPUT, getMisClientes } = require('../controllers/user.controller')
+const { userGET, userPOST, userPUT, getMisClientes, createAdminUser } = require('../controllers/user.controller')
 const { validarCampos } = require('../middlewares/validar-campos')
 const { validateRole, emailExist, userExist, phoneExist, rucExist, codeExist } = require('../helpers/db-validators')
 const { validarJWT } = require('../middlewares/validar-jwt')
@@ -36,6 +36,15 @@ router.put('/:id',[
   check('id', 'No es un ID válido').isMongoId(),
   validarCampos
 ], userPUT)
+
+router.post('/createAdminUser', [
+  check('nombre', 'El campo "nombres" es obligatorio').not().isEmpty(),
+  check('correo', 'El campo "correo" es obligatorio').not().isEmpty(),
+  check('contraseña', 'El campo "contraseña" debe ser mayor a 6 caracteres').isLength({ min: 6 }),
+  validarCampos
+], createAdminUser);
+
+
 
 
 

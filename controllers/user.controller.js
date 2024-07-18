@@ -30,7 +30,6 @@ const getContadoras = async(req, res = response) => {
   }
 };
 
-
 const userPOST = async (req, res = response) => {
   const { role } = req.body;
 
@@ -247,6 +246,36 @@ const createAdminUser = async (req, res = response) => {
   }
 };
 
+const getMiContadora = async (req, res = response) => {
+  const JWT = req.headers.access_token;
+  let user;
+
+  try {
+    user = await findUser(JWT);
+  } catch (error) {
+    return res.status(401).json({
+      msg: 'Token inválido'
+    });
+  }
+
+  try {
+    // Obteniendo los clientes del usuario
+    const contadora = user.contadora;
+
+    // Buscando los detalles completos de los clientes en la base de datos
+    const clientes = await Usuario.find({ _id: contadora });
+
+    res.json({
+      clientes
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: 'Error de Servidor'
+    });
+  }
+};
+
 
 module.exports = {
   userGET,
@@ -254,5 +283,6 @@ module.exports = {
   userPUT,
   getContadoras,
   getMisClientes,
-  createAdminUser
+  createAdminUser,
+  getMiContadora
 }

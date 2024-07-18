@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const { check } = require('express-validator')
-const { userGET, userPOST, userPUT, getMisClientes, createAdminUser } = require('../controllers/user.controller')
+const { userGET, userPOST, userPUT, getMisClientes, createAdminUser, getContadoras, getMiContadora } = require('../controllers/user.controller')
 const { validarCampos } = require('../middlewares/validar-campos')
 const { validateRole, emailExist, userExist, phoneExist, rucExist, codeExist } = require('../helpers/db-validators')
 const { validarJWT } = require('../middlewares/validar-jwt')
@@ -14,12 +14,17 @@ router.get('/',[
 
 
 router.get('/getContadoras',[
-], userGET)
+], getContadoras)
 
 router.get('/getMisClientes',[
   validarJWT,
   validarCampos
 ], getMisClientes)
+
+router.get('/getMiContadora',[
+  validarJWT,
+  validarCampos
+], getMiContadora)
 
 router.post('/', [
   check('nombre', 'El campo "nombre" es obligatorio').not().isEmpty(),

@@ -1,8 +1,6 @@
 const { Socio, PrestacionLegal } = require("../models/prestacion");
 
-
-
-exports.createPrestacionLegal = async (req, res) => {
+const createPrestacionLegal = async (req, res) => {
   const { socios, ...prestacionLegalData } = req.body;
 
   try {
@@ -33,7 +31,7 @@ exports.createPrestacionLegal = async (req, res) => {
   }
 };
 
-exports.getPrestacionesLegales = async (req, res) => {
+const getPrestacionesLegales = async (req, res) => {
   try {
     const prestacionesLegales = await PrestacionLegal.find().populate('socios');
     res.status(200).json({
@@ -52,7 +50,7 @@ exports.getPrestacionesLegales = async (req, res) => {
   }
 };
 
-exports.getPrestacionLegal = async (req, res) => {
+const getPrestacionLegal = async (req, res) => {
   try {
     const prestacionLegal = await PrestacionLegal.findById(req.params.id).populate('socios');
     res.status(200).json({
@@ -70,7 +68,7 @@ exports.getPrestacionLegal = async (req, res) => {
   }
 };
 
-exports.actualizarPrestacionLegal = async (req, res) => {
+const actualizarPrestacionLegal = async (req, res) => {
   try {
     const prestacionLegal = await PrestacionLegal.findById(req.params.id);
     if (!prestacionLegal) {
@@ -95,7 +93,7 @@ exports.actualizarPrestacionLegal = async (req, res) => {
   }
 };
 
-exports.eliminarPrestacionLegal = async (req, res) => {
+const eliminarPrestacionLegal = async (req, res) => {
   try {
     const prestacionLegal = await PrestacionLegal.findById(req.params.id);
     if (!prestacionLegal) {
@@ -119,3 +117,12 @@ exports.eliminarPrestacionLegal = async (req, res) => {
     });
   }
 };
+
+
+module.exports = {
+  createPrestacionLegal,
+  getPrestacionesLegales,
+  getPrestacionLegal,
+  actualizarPrestacionLegal,
+  eliminarPrestacionLegal
+}

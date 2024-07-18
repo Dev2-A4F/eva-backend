@@ -3,7 +3,7 @@ const { check } = require("express-validator");
 const { validarCampos } = require("../middlewares/validar-campos");
 const { inicioServicio } = require("../controllers/servicio.controller");
 const { validarJWT } = require("../middlewares/validar-jwt");
-const { createPrestacionLegal, getPrestacionesLegales, getPrestacionLegal, actualizarPrestacionLegal, eliminarPrestacionLegal } = require("../controllers/prestacion");
+const { createPrestacionLegal, getPrestacionesLegales, getPrestacionLegal, actualizarPrestacionLegal, eliminarPrestacionLegal } = require("../controllers/prestacion.controller");
 
 
 const router = Router()

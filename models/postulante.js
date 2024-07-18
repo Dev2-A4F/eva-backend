@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 
+
 const PostulanteSchema = Schema({
   nombre: {
     type: String,

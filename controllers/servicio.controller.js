@@ -1,8 +1,6 @@
 const { findUser } = require('../helpers/findUser');
 const Servicio = require('../models/servicio'); 
 
-
-
 const inicioServicio = async (req, res) => {
   const JWT = req.headers.access_token;
   const { fecha, hora } = req.body;
@@ -13,7 +11,6 @@ const inicioServicio = async (req, res) => {
       return res.status(404).json({ msg: 'User not found' });
     }
 
-    console.log(user);
 
     const newServicio = new Servicio({
       linkReunion: "https://example.com/meeting",

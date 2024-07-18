@@ -10,12 +10,12 @@ const validateRole = async(role = '') => {
   }
 }
 
-const emailExist = async( email ) => {
-  if( !email || email === null ) { 
+const emailExist = async( correo ) => {
+  if( !correo || correo === null ) { 
     return true 
   }
 
-  const emailExist = await Usuario.findOne( { email } )
+  const emailExist = await Usuario.findOne( { correo } )
   if ( emailExist ) {
     throw new Error(`El correo ${email} ya está registrado`)
   }

@@ -10,7 +10,9 @@ class Server {
     this.usuarioPath    = '/api/user'
     this.authPath       = '/api/auth'
     this.postulantePath = '/api/postulante'
-    this.servicioPath      = '/api/servicio'
+    this.servicioPath    = '/api/servicio'
+    this.prestacionPath    = '/api/prestacion'
+
 
 
 
@@ -51,7 +53,7 @@ class Server {
     this.app.use(this.usuarioPath, require('../routes/user'))
     this.app.use(this.postulantePath, require('../routes/postulante'))
     this.app.use(this.servicioPath, require('../routes/servicio'))
-
+    this.app.use(this.prestacionPath, require('../routes/prestacion'))
   }
 
   listen() {

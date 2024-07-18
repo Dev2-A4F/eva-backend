@@ -1,4 +1,5 @@
 const { findUser } = require('../helpers/findUser');
+const { generateHour } = require('../helpers/hourGenerate');
 const Servicio = require('../models/servicio'); 
 
 const inicioServicio = async (req, res) => {
@@ -16,7 +17,8 @@ const inicioServicio = async (req, res) => {
       linkReunion: "https://example.com/meeting",
       cliente_id: user._id,
       fecha: fecha,
-      hora: hora
+      hora: hora,
+      fecha_creacion: generateHour()
     });
 
     await newServicio.save();

@@ -44,6 +44,9 @@ const ServicioSchema = Schema({
   hora: {
     type: String,
     default: ""
+  },
+  fecha_creacion: {
+    type: String,
   }
 });
 

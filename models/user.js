@@ -43,7 +43,17 @@ const UsuarioSchema = Schema({
   }],
   servicioCliente: {
     type: String,
-  }
+  },
+  fecha_nacimiento: {
+    type: String,
+  },
+  imgContadora: {
+    type: String,
+  },
+  especialidad: {
+    type: String,
+  },
+
 });
 
 UsuarioSchema.methods.toJSON = function () {

@@ -12,7 +12,6 @@ const inicioServicio = async (req, res) => {
       return res.status(404).json({ msg: 'User not found' });
     }
 
-
     const newServicio = new Servicio({
       linkReunion: "https://example.com/meeting",
       cliente_id: user._id,

@@ -22,7 +22,6 @@ const inicioServicio = async (req, res) => {
 
     await newServicio.save();
 
-    // Actualizar el usuario con el ID del nuevo servicio
     user.servicioCliente = newServicio._id;
     await user.save();
 

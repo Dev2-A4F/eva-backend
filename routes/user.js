@@ -1,16 +1,11 @@
 const { Router } = require('express')
 const { check } = require('express-validator')
-const { userGET, userPOST, userPUT, getMisClientes, createAdminUser, getContadoras, getMiContadora, getContadoraById } = require('../controllers/user.controller')
+const { userPOST, getMisClientes, createAdminUser, getContadoras, getMiContadora, getContadoraById } = require('../controllers/user.controller')
 const { validarCampos } = require('../middlewares/validar-campos')
 const { validateRole, emailExist, userExist, phoneExist, rucExist, codeExist } = require('../helpers/db-validators')
 const { validarJWT } = require('../middlewares/validar-jwt')
 
 const router = Router()
-
-router.get('/',[
-  validarJWT,
-  validarCampos
-], userGET)
 
 
 router.get('/getContadoras',[
@@ -40,12 +35,6 @@ router.post('/', [
   validarCampos
 ], userPOST);
 
-
-router.put('/:id',[
-  validarJWT,
-  check('id', 'No es un ID válido').isMongoId(),
-  validarCampos
-], userPUT)
 
 router.post('/createAdminUser', [
   check('nombre', 'El campo "nombres" es obligatorio').not().isEmpty(),

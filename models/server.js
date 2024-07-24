@@ -14,11 +14,9 @@ class Server {
     this.servicioPath    = '/api/servicio'
     this.prestacionPath    = '/api/prestacion'
 
-    
 
     //Conectar a base de datos
     this.conectarDB()
-
     //Middlewares
     this.middlewares()
 
@@ -28,10 +26,7 @@ class Server {
 
   }
 
-  async conectarDB() {
-    await dbConnection()
-  }
-
+ 
   middlewares() {
     //Aplicación del CORS
     this.app.use(cors({
@@ -64,8 +59,9 @@ class Server {
   }
 
   listen() {
-    this.app.listen(this.port, () => {
-      console.log(`Example app listening on port ${this.port}`)
+    this.app.listen(this.port, async () => {
+       await dbConnection()
+       console.log(`Example app listening on port ${this.port}`)
     })
   }
 }

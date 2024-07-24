@@ -14,6 +14,8 @@ class Server {
     this.servicioPath    = '/api/servicio'
     this.prestacionPath    = '/api/prestacion'
 
+    
+
     //Conectar a base de datos
     this.conectarDB()
 

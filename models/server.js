@@ -24,7 +24,7 @@ class Server {
 
   }
 
- 
+
   middlewares() {
     //Aplicación del CORS
     this.app.use(cors({

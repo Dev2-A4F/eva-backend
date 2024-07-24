@@ -15,8 +15,6 @@ class Server {
     this.prestacionPath    = '/api/prestacion'
 
 
-    //Conectar a base de datos
-    this.conectarDB()
     //Middlewares
     this.middlewares()
 

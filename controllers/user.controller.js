@@ -2,22 +2,10 @@ const { response, request } = require('express')
 const bcryptjs = require('bcryptjs')
 const  Usuario  = require('../models/user')
 const  Servicio  = require('../models/servicio')
-
-const { verificarUnicidad } = require('../helpers/verificarUnicidad')
 const { findUser } = require('../helpers/findUser')
-const cloudinary = require('../config/cloudinary'); // Asegúrate de que la ruta es correcta
+const cloudinary = require('../config/cloudinary');
 
 
- 
-const userGET = async(req = request, res = response) => {
-  const { limit = 5, from = 0} = req.query
-  const usuarios = await Usuario.find()
-    .skip(Number( from ))
-    .limit(Number( limit ))
-
-
-  res.json({ usuarios })
-}
 
 const getContadoras = async(req, res = response) => {
   try {
@@ -164,53 +152,6 @@ const userPOST = async (req, res = response) => {
 };
 
 
-const userPUT = async(req, res = response) => {
-  const id = req.params.id
-  let { _id, password, email, username, phone, ...rest} = req.body
-
-  //Verifica que los Datos no existan ya 
-
-  try {
-    const errorMessage = await verificarUnicidad( { email, username, phone, id } );
-    if (errorMessage) {
-      return res.status(400).json({
-        msg: errorMessage
-      });
-    }
-  } catch (error) {
-    console.log(error)
-    return res.status(500).json({
-      msg: 'Error al verificar unicidad de los datos',
-      error
-    });
-  }
-
-  if (password) {
-    const salt = bcryptjs.genSaltSync();
-    password = bcryptjs.hashSync(password, salt);
-  }
-
-  // Preparar el objeto con los datos actualizados, incluyendo correo, username, phone y password si se ha proporcionado
-  const datosActualizados = {
-    ...rest,
-    ...(email && {email}),
-    ...(username && {username}),
-    ...(phone && {phone}),
-    ...(password && {password})
-  };
-
-  try {
-    const usuario = await Usuario.findByIdAndUpdate(id, datosActualizados, { new: true });
-    res.json(usuario);
-  } catch (error) {
-    res.status(500).json({
-      msg: 'Error al actualizar usuario',
-      error
-    });
-  }
-
-}
-
 const getMisClientes = async (req, res = response) => {
   const JWT = req.headers.access_token;
   let user;
@@ -348,9 +289,7 @@ const getContadoraById = async (req, res = response) => {
 
 
 module.exports = {
-  userGET,
   userPOST,
-  userPUT,
   getContadoras,
   getMisClientes,
   createAdminUser,

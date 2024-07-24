@@ -25,7 +25,7 @@ const ServicioSchema = Schema({
     default: ""
   },
   paso: {
-    type: [Number],
+    type: Number,
     default: 1
   },
   state: {

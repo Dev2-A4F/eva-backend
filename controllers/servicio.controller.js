@@ -3,11 +3,11 @@ const { generateHour } = require('../helpers/hourGenerate');
 const Servicio = require('../models/servicio'); 
 
 const inicioServicio = async (req, res) => {
-  const JWT = req.headers.access_token;
+  const id = req.params.id;  // Recibe el ID desde los parámetros de la URL
   const { fecha, hora } = req.body;
 
   try {
-    const user = await findUser(JWT);
+    const user = await Usuario.findById(id);
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }

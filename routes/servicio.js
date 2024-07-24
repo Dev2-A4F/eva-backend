@@ -9,14 +9,12 @@ const { validarJWT } = require('../middlewares/validar-jwt')
 const router = Router()
 
 router.post('/inicioServicio', [
-  validarJWT,
   check('fecha', 'La fecha es obligatoria').not().isEmpty(),
   check('hora', 'La hora es obligatoria').not().isEmpty(),
   validarCampos
 ], inicioServicio )
 
 router.put('/updateServicio/:id', [
-  validarJWT,
   check('id', 'El ID del servicio es obligatorio').not().isEmpty(),
   validarCampos
 ], updateServicio);

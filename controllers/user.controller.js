@@ -153,18 +153,18 @@ const userPOST = async (req, res = response) => {
 
 
 const getMisClientes = async (req, res = response) => {
-  const JWT = req.headers.access_token;
-  let user;
+  const id = req.params.id;  // Recibe el ID desde los parámetros de la URL
 
   try {
-    user = await findUser(JWT);
-  } catch (error) {
-    return res.status(401).json({
-      msg: 'Token inválido'
-    });
-  }
+    // Buscar el usuario por ID en la base de datos
+    const user = await Usuario.findById(id);
+    
+    if (!user) {
+      return res.status(404).json({
+        msg: 'Usuario no encontrado'
+      });
+    }
 
-  try {
     // Obteniendo los clientes del usuario
     const clienteIds = user.clientes;
 
@@ -182,6 +182,7 @@ const getMisClientes = async (req, res = response) => {
     });
   }
 };
+
 
 const createAdminUser = async (req, res = response) => {
   const { correo, contraseña } = req.body;

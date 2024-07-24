@@ -11,9 +11,7 @@ const router = Router()
 router.get('/getContadoras',[
 ], getContadoras)
 
-router.get('/getMisClientes',[
-  validarJWT,
-  validarCampos
+router.get('/getMisClientes/:id',[
 ], getMisClientes)
 
 router.get('/getMiContadora',[

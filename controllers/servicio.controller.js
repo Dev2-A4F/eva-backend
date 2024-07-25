@@ -52,7 +52,24 @@ const updateServicio = async (req, res) => {
   }
 };
 
+const getServicio = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const servicio = await Servicio.findById(id)
+
+    if(!servicio) {
+      res.status(404).json({ msg: 'No se encontró este servicio' });
+    }
+
+    res.json(servicio);
+  } catch (error) {
+    res.status(500).json({ msg: 'Server error', error });
+  }
+};
+
 module.exports = {
   inicioServicio,
-  updateServicio
+  updateServicio,
+  getServicio
 };

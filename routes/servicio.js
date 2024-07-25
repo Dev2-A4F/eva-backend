@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const { check } = require('express-validator')
 const { validarCampos } = require('../middlewares/validar-campos')
-const { inicioServicio, updateServicio } = require('../controllers/servicio.controller')
+const { inicioServicio, updateServicio, getServicio } = require('../controllers/servicio.controller')
 const { validarJWT } = require('../middlewares/validar-jwt')
 
 
@@ -20,6 +20,9 @@ router.put('/updateServicio/:id', [
   validarCampos
 ], updateServicio);
 
+router.get("/getServicio/:id", [
+  check('id', 'El ID del servicio es obligatorio').not().isEmpty(),
+],getServicio)
 
 
 

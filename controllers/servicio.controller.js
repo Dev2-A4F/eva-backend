@@ -1,10 +1,14 @@
 const { findUser } = require('../helpers/findUser');
 const { generateHour } = require('../helpers/hourGenerate');
 const Servicio = require('../models/servicio'); 
+const Usuario = require('../models/user')
+
 
 const inicioServicio = async (req, res) => {
   const id = req.params.id;  // Recibe el ID desde los parámetros de la URL
   const { fecha, hora } = req.body;
+
+  console.log(id)
 
   try {
     const user = await Usuario.findById(id);

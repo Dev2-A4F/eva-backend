@@ -55,6 +55,11 @@ const ServicioSchema = Schema({
   },
   fecha_creacion: {
     type: String,
+  },
+  status_reunion: {
+    type: [String],
+    enum: ["ACTIVA", "PENDIENTE", "CANCELADA"],
+    default: ["ACTIVA"]
   }
 });
 

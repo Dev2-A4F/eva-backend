@@ -1,10 +1,11 @@
 const multer = require('multer');
-const { findUser } = require('../helpers/findUser');
 const { generateHour } = require('../helpers/hourGenerate');
 const Servicio = require('../models/servicio'); 
 const Usuario = require('../models/user')
 const cloudinary = require('../config/cloudinary');
 const { response } = require('express');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 
 const inicioServicio = async (req, res) => {
@@ -38,28 +39,25 @@ const inicioServicio = async (req, res) => {
   }
 };
 
-
-// Configuración de multer para manejar archivos en memoria
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-// Función para subir archivos a Cloudinary desde un buffer
 const uploadToCloudinary = (fileBuffer, folder, filename) => {
   return new Promise((resolve, reject) => {
-    const upload_stream = cloudinary.uploader.upload_stream({ folder: folder, public_id: filename.trim(), resource_type: 'raw' }, (error, result) => {
-      if (result) {
-        resolve(result);
-      } else {
-        reject(error);
+    const upload_stream = cloudinary.uploader.upload_stream(
+      { folder: folder, public_id: filename.trim(), resource_type: 'raw' },
+      (error, result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          reject(error);
+        }
       }
-    });
-    require('streamifier').createReadStream(fileBuffer).pipe(upload_stream);
+    );
+    streamifier.createReadStream(fileBuffer).pipe(upload_stream);
   });
 };
 
 const updateServicio = async (req, res = response) => {
   const { id } = req.params;
-  const { files, ...updates } = req.body;
+  const { files, documentContadora, ...updates } = req.body;
 
   try {
     // Almacenar la información de los archivos
@@ -78,9 +76,22 @@ const updateServicio = async (req, res = response) => {
       }
     }
 
+    // Subir el archivo único para documentContadora si está presente
+    let uploadedDocumentContadora = null;
+    if (documentContadora) {
+      const { name, base64 } = documentContadora;
+      const fileBuffer = Buffer.from(base64, 'base64');
+      const result = await uploadToCloudinary(fileBuffer, 'documentos', name);
+      uploadedDocumentContadora = result.secure_url;
+    }
+
     // Actualizar el servicio con la nueva información
     if (uploadedFiles.length > 0) {
       updates.files = uploadedFiles;
+    }
+
+    if (uploadedDocumentContadora) {
+      updates.documentContadora = uploadedDocumentContadora;
     }
 
     const updatedServicio = await Servicio.findByIdAndUpdate(id, updates, { new: true });
@@ -93,7 +104,7 @@ const updateServicio = async (req, res = response) => {
     console.error(error);
     res.status(500).json({ msg: 'Server error', error });
   }
-};;
+};
 
 const getServicio = async (req, res) => {
   const { id } = req.params;

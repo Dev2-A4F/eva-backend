@@ -8,10 +8,18 @@ const ServicioSchema = Schema({
   labelFiles: {
     type: [String],
   },
-  files: {
-    type: [String],
-    default: []
-  },
+  files: [
+    {
+      name: {
+        type: String,
+        required: true
+      },
+      url: {
+        type: String,
+        required: true
+      }
+    }
+  ],
   titulo: {
     type: String,
     default: ""
@@ -51,9 +59,9 @@ const ServicioSchema = Schema({
 });
 
 ServicioSchema.methods.toJSON = function () {
-  const { __v, _id, ...usuario } = this.toObject();
-  usuario.uid = _id;
-  return usuario;
+  const { __v, _id, ...servicio } = this.toObject();
+  servicio.uid = _id;
+  return servicio;
 }
 
 module.exports = model('Servicio', ServicioSchema);
